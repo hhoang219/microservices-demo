@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # Git repo URI
+    repoURL: https://github.com/hhoang219/microservices-demo.git
+    # Select branch to deploy
+    targetRevision: scaling-demo
+    # Path to kubernete yaml folder
+    path: kubernetes-manifests/
+    # Apply kubernetes yaml files in child folders
+    directory:
+      recurse: true
+  destination:
+    # Which cluster to deploy. kubernetes.default.svc is the cluster where ArgoCD is deployed
+    server: https://kubernetes.default.svc
+    # Namespace for your application
+    namespace: snappass
+  syncPolicy:
+    automated:
+      # delete if resource does not exist in desired state
+      prune: false
+      selfHeal: false
